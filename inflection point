@@ -1,0 +1,532 @@
+
+> Sys.setlocale("LC_TIME", "C")
+[1] "C"
+> library(doBy,lib.loc=R.LibLocation)
+> library(plotrix,lib.loc=R.LibLocation)
+> library(stringi,lib.loc=R.LibLocation)
+> library(stringr,lib.loc=R.LibLocation)
+> library(survival,lib.loc=R.LibLocation)
+> library(rms,lib.loc=R.LibLocation)
+Loading required package: Hmisc
+Loading required package: lattice
+Loading required package: Formula
+Loading required package: ggplot2
+
+Attaching package: 'Hmisc'
+
+The following objects are masked from 'package:base':
+
+    format.pval, units
+
+Loading required package: SparseM
+
+Attaching package: 'SparseM'
+
+The following object is masked from 'package:base':
+
+    backsolve
+
+> library(nnet,lib.loc=R.LibLocation)
+> library(car,lib.loc=R.LibLocation)
+Loading required package: carData
+
+Attaching package: 'car'
+
+The following objects are masked from 'package:rms':
+
+    Predict, vif
+
+> library(mgcv,lib.loc=R.LibLocation)
+Loading required package: nlme
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
+
+Attaching package: 'mgcv'
+
+The following object is masked from 'package:nnet':
+
+    multinom
+
+> pdfwd<-6; pdfht<-6
+> setwd("C:/Users/ThinkPad/Desktop/yierlianxi/AKI/AKI_3_tbl")
+> load("C:/Users/ThinkPad/Desktop/yierlianxi/AKI/AKI.Rdata")
+> if (length(which(ls()=="R"))==0) R<-get(ls()[1])
+> names(R)<-toupper(names(R))
+> ofname<-'AKI_3_tbl'
+> 
+> 
+> this.vars.used<- c('MIITER','AKIPROGRESSION48HWITH0','SCRICUADMISSION_INITIAL','SAPSII','MEANBP_FIRSTDAY','FLUIDINTAKE612','FLUIDBALANCE612','AGE','GENDER','FIRSTCAREUNIT','ETHNICITY','DIABETES','CHRONICLUNGFAILURE','LIVERFAILURE','HYPERTENSION','SEPSIS_ADMISSION','VASOPRESSORUSE612','UO612PERKGHNEW','CONGESTIVE_HEART_FAILURERCD','METASTATIC_CANCERRCD','DIURETICSFIRSTDAY')
+> this.vars.type<- c(6,2,0,0,0,0,0,0,2,5,2,2,2,2,2,2,2,0,2,2,2)
+> R<- R[this.vars.used]
+> vname<-c("MIITER","MIITER.0","MIITER.1","MIITER.2","MIITER.3","MIITER.4","MIITER.5")
+> vlabel<-c("MIITER","  0","  1","  2","  3","  4","  5")
+> vname<-c(vname,"AKIPROGRESSION48HWITH0","AKIPROGRESSION48HWITH0.0","AKIPROGRESSION48HWITH0.1")
+> vlabel<-c(vlabel,"AKIPROGRESSION48HWITH0","  0","  1")
+> vname<-c(vname,"SCRICUADMISSION_INITIAL","SAPSII","MEANBP_FIRSTDAY")
+> vlabel<-c(vlabel,"SCRICUADMISSION_INITIAL","SAPSII","MEANBP_FIRSTDAY")
+> vname<-c(vname,"FLUIDINTAKE612","FLUIDBALANCE612","AGE","GENDER","GENDER.1","GENDER.2")
+> vlabel<-c(vlabel,"FLUIDINTAKE612","FLUIDBALANCE612","AGE","GENDER","  1","  2")
+> vname<-c(vname,"FIRSTCAREUNIT","FIRSTCAREUNIT.1","FIRSTCAREUNIT.2","FIRSTCAREUNIT.3","FIRSTCAREUNIT.4","FIRSTCAREUNIT.5")
+> vlabel<-c(vlabel,"FIRSTCAREUNIT","  1","  2","  3","  4","  5")
+> vname<-c(vname,"ETHNICITY","ETHNICITY.1","ETHNICITY.2","DIABETES","DIABETES.0","DIABETES.1")
+> vlabel<-c(vlabel,"ETHNICITY","  1","  2","DIABETES","  0","  1")
+> vname<-c(vname,"CHRONICLUNGFAILURE","CHRONICLUNGFAILURE.0","CHRONICLUNGFAILURE.1")
+> vlabel<-c(vlabel,"CHRONICLUNGFAILURE","  0","  1")
+> vname<-c(vname,"LIVERFAILURE","LIVERFAILURE.0","LIVERFAILURE.1")
+> vlabel<-c(vlabel,"LIVERFAILURE","  0","  1")
+> vname<-c(vname,"HYPERTENSION","HYPERTENSION.0","HYPERTENSION.1")
+> vlabel<-c(vlabel,"HYPERTENSION","  0","  1")
+> vname<-c(vname,"SEPSIS_ADMISSION","SEPSIS_ADMISSION.0","SEPSIS_ADMISSION.1")
+> vlabel<-c(vlabel,"SEPSIS_ADMISSION","  0","  1")
+> vname<-c(vname,"VASOPRESSORUSE612","VASOPRESSORUSE612.0","VASOPRESSORUSE612.1")
+> vlabel<-c(vlabel,"VASOPRESSORUSE612","  0","  1")
+> vname<-c(vname,"UO612PERKGHNEW","CONGESTIVE_HEART_FAILURERCD","CONGESTIVE_HEART_FAILURERCD.0","CONGESTIVE_HEART_FAILURERCD.1")
+> vlabel<-c(vlabel,"UO612PERKGHNEW","CONGESTIVE_HEART_FAILURERCD","  0","  1")
+> vname<-c(vname,"METASTATIC_CANCERRCD","METASTATIC_CANCERRCD.0","METASTATIC_CANCERRCD.1")
+> vlabel<-c(vlabel,"METASTATIC_CANCERRCD","  0","  1")
+> vname<-c(vname,"DIURETICSFIRSTDAY","DIURETICSFIRSTDAY.0","DIURETICSFIRSTDAY.1")
+> vlabel<-c(vlabel,"DIURETICSFIRSTDAY","  0","  1")
+>  
+> library(MASS,lib.loc=R.LibLocation); 
+> library(gdata,lib.loc=R.LibLocation); 
+gdata: Unable to locate valid perl interpreter
+gdata: 
+gdata: read.xls() will be unable to read Excel XLS and XLSX files
+gdata: unless the 'perl=' argument is used to specify the location of a
+gdata: valid perl intrpreter.
+gdata: 
+gdata: (To avoid display of this message in the future, please ensure
+gdata: perl is installed and available on the executable search path.)
+gdata: Unable to load perl libaries needed by read.xls()
+gdata: to support 'XLX' (Excel 97-2004) files.
+
+gdata: Unable to load perl libaries needed by read.xls()
+gdata: to support 'XLSX' (Excel 2007+) files.
+
+gdata: Run the function 'installXLSXsupport()'
+gdata: to automatically download and install the perl
+gdata: libaries needed to support Excel XLS and XLSX formats.
+
+Attaching package: 'gdata'
+
+The following object is masked from 'package:stats':
+
+    nobs
+
+The following object is masked from 'package:utils':
+
+    object.size
+
+The following object is masked from 'package:base':
+
+    startsWith
+
+> library(geepack,lib.loc=R.LibLocation); 
+> library(mgcv,lib.loc=R.LibLocation); 
+> WD <- R; rm(R); gc(); 
+          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 2145567 114.6    4495024 240.1  2460677 131.5
+Vcells 3677158  28.1    8388608  64.0  4958524  37.9
+> title<-'阈值效应分析MIITER==1'; 
+> WD<-subset(WD,((!is.na(MIITER) & (MIITER==1)))); 
+> wd.subset<-paste("Use subset of data: (!is.na(MIITER) & (MIITER==1))"); 
+> weights.var<- NA; 
+> yvname<-c('AKIPROGRESSION48HWITH0'); 
+> ydist<-c('binomial'); 
+> ylink<-c('logit'); 
+> ylv<- this.vars.type[match(yvname, this.vars.used)]; 
+> par1<-'自动寻找最佳拐点'; 
+> avname<-c('DIURETICSFIRSTDAY','METASTATIC_CANCERRCD','CONGESTIVE_HEART_FAILURERCD','SCRICUADMISSION_INITIAL','SAPSII','MEANBP_FIRSTDAY','FLUIDINTAKE612','FLUIDBALANCE612','AGE','GENDER','FIRSTCAREUNIT','ETHNICITY','CHRONICLUNGFAILURE','DIABETES','LIVERFAILURE','HYPERTENSION','SEPSIS_ADMISSION','VASOPRESSORUSE612'); 
+> saf<-c('0','0','0','.','.','.','.','.','.','0','0','0','0','0','0','0','0','0'); 
+> vaf<-c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0); 
+> alv<- this.vars.type[match(avname, this.vars.used)]; 
+> bvar<- NA; 
+> xvname<-c('UO612PERKGHNEW'); 
+> sxf<-c(0); 
+> vxf<-c(0); 
+> xlv<- this.vars.type[match(xvname, this.vars.used)]; 
+> chk<- 0; 
+> cox<- 0; 
+> timevar<- NA; 
+> vname.start<- NA; 
+> subjvname<- NA; 
+> gee.TYPE<-'independence'; 
+> prn<-0; 
+> dec<-0.001; 
+> if (is.na(dec)) dec<-1; 
+> if (dec < 1) dec<-abs(log10(dec)); 
+> ##R package## MASS gdata geepack mgcv ##R package##;
+> pvformat<-function(p,dec) {
++   pp <- sprintf(paste("%.",dec,"f",sep=""),as.numeric(p))
++   if (is.matrix(p)) {pp<-matrix(pp, nrow=nrow(p)); colnames(pp)<-colnames(p);rownames(pp)<-rownames(p);}
++   lw <- paste("<",substr("0.00000000000",1,dec+1),"1",sep="");
++   pp[as.numeric(p)<(1/10^dec)]<-lw
++   return(pp)
++ }
+> numfmt<-function(p,dec) {
++   if (is.list(p)) p<-as.matrix(p)
++   pp <- sprintf(paste("%.",dec,"f",sep=""),as.numeric(p))
++   if (is.matrix(p)) {pp<-matrix(pp, nrow=nrow(p));colnames(pp)<-colnames(p);rownames(pp)<-rownames(p);}
++   pp[as.numeric(p)>10000000]<- "inf."
++   pp[is.na(p) | gsub(" ","",p)==""]<- ""
++   pp[p=="-Inf"]<-"-Inf"
++   pp[p=="Inf"]<-"Inf"
++   return(pp)
++ }
+> mat2htmltable<-function(mat) {
++   t1<- apply(mat,1,function(z) paste(z,collapse="</td><td>"))
++   t2<- paste("<tr><td>",t1,"</td></tr>")
++   return(paste(t2,collapse=" "))
++ }
+> setgam<-function(fml,yi,wdtmp) {
++   if (ydist[yi]=="") ydist[yi]<-"gaussian"
++   if (ydist[yi]=="exact") ydist[yi]<-"binomial"
++   if (ydist[yi]=="breslow") ydist[yi]<-"binomial"
++   if (ydist[yi]=="gaussian") mdl<-try(gam(formula(fml),weights=wdtmp$weights,data=wdtmp, family=gaussian(link="identity")))
++   if (ydist[yi]=="binomial") mdl<-try(gam(formula(fml),weights=wdtmp$weights,data=wdtmp, family=binomial(link="logit")))
++   if (ydist[yi]=="poisson") mdl<-try(gam(formula(fml),weights=wdtmp$weights,data=wdtmp, family=poisson(link="log")))
++   if (ydist[yi]=="gamma") mdl<-try(gam(formula(fml),weights=wdtmp$weights,data=wdtmp, family=Gamma(link="inverse")))
++   if (ydist[yi]=="negbin") mdl<-try(gam(formula(fml),weights=wdtmp$weights,data=wdtmp, family=negbin(c(1,10), link="log")))
++   return(mdl)
++ }
+> setgee<-function(fml,yi, wdtmp) {
++   if (ydist[yi]=="") ydist[yi]<-"gaussian"
++   if (ydist[yi]=="exact") ydist[yi]<-"binomial"
++   if (ydist[yi]=="breslow") ydist[yi]<-"binomial"
++   if (ydist[yi]=="gaussian") md<-try(geeglm(formula(fml),id=wdtmp[,subjvname],corstr=gee.TYPE,family="gaussian",weights=wdtmp$weights,data=wdtmp))
++   if (ydist[yi]=="binomial") md<-try(geeglm(formula(fml),id=wdtmp[,subjvname],corstr=gee.TYPE,family="binomial",weights=wdtmp$weights,data=wdtmp))
++   if (ydist[yi]=="poisson") md<-try(geeglm(formula(fml),id=wdtmp[,subjvname],corstr=gee.TYPE,family="poisson",weights=wdtmp$weights,data=wdtmp))
++   if (ydist[yi]=="gamma") md<-try(geeglm(formula(fml),id=wdtmp[,subjvname],corstr=gee.TYPE,family="Gamma",weights=wdtmp$weights,data=wdtmp))
++   if (ydist[yi]=="negbin") md<-try(geeglm.nb(formula(fml),id=wdtmp[,subjvname],corstr=gee.TYPE,weights=wdtmp$weights,data=wdtmp))
++   return(md)
++ }
+> setglm<-function(fml,yi, wdtmp) {
++   if (ydist[yi]=="") ydist[yi]<-"gaussian"
++   if (ydist[yi]=="exact") ydist[yi]<-"binomial"
++   if (ydist[yi]=="breslow") ydist[yi]<-"binomial"
++   if (ydist[yi]=="gaussian") md<-try(glm(formula(fml),family="gaussian",weights=wdtmp$weights,data=wdtmp))
++   if (ydist[yi]=="binomial") md<-try(glm(formula(fml),family="binomial",weights=wdtmp$weights,data=wdtmp))
++   if (ydist[yi]=="poisson") md<-try(glm(formula(fml),family="poisson",weights=wdtmp$weights,data=wdtmp))
++   if (ydist[yi]=="gamma") md<-try(glm(formula(fml),family="Gamma",weights=wdtmp$weights,data=wdtmp))
++   if (ydist[yi]=="negbin") md<-try(glm.nb(formula(fml),weights=wdtmp$weights,data=wdtmp))
++   return(md)
++ }
+> mdl2oo<-function(mdl, xxname, opt) {
++   if (is.na(mdl[[1]][1])) return(rep(" ",times=length(xxname)))
++   if (substr(mdl[[1]][1],1,5)=="Error") return(rep(" ",times=length(xxname)))
++   decp<-dec+2; if (decp>4) decp<-4
++   gs<-summary(mdl); print(mdl$formula); print(gs)
++   if (opt=="gam") {gsparm <- gs$p.table; } else {gsparm <- gs$coefficients;}
++   gsp<-gsparm[match(xxname,rownames(gsparm)),]
++   if (length(xxname)==1) {beta<-gsp[1]; se<-gsp[2]; pv<-gsp[4]; 
++   } else {beta<-gsp[,1]; se<-gsp[,2]; pv<-gsp[,4]; }
++   ci1<- beta-1.96*se; ci2<- beta+1.96*se
++   pvx<-substr(rep("****",length(pv)),1,(pv<=0.05)+(pv<=0.01)+(pv<=0.001)) 
++   if (colprn==3) {pvv<-pvx;} else {pvv<-pvformat(pv,decp);}
++   if ((colprn!=2) & (gs$family[[2]]=="log" | gs$family[[2]]=="logit")) {
++     o1<-paste(numfmt(exp(beta),dec)," (",numfmt(exp(ci1),dec),", ",numfmt(exp(ci2),dec),")",sep="")
++   } else {
++     if (colprn<3) {o1<-paste(numfmt(beta,dec), " (",numfmt(ci1,dec),", ",numfmt(ci2,dec),")",sep="")
++     } else {o1<-paste(numfmt(beta,dec), "+",numfmt(se,dec),sep="");}
++   }     
++   o1<-paste(o1,pvv); o1[is.na(beta)]<-NA
++   return(o1)
++ }
+> removeNA<-function(i,j,wdf) {
++  vvv<-c(yvname[i],xvname[j],avname,subjvname,bvar,vname.start,timevar); 
++  vvv<-vvv[!is.na(vvv)]; vvv<-vvv[vvv>" "]
++  tmp<-is.na(wdf[,vvv]); 
++  return(wdf[apply(tmp,1,sum)==0,])
++ }
+> get.tpval<-function(i,j,g,opt,wdtmp, tppmin=NA, tppmax=NA) {
++   if (is.na(wdtmp)) {
++     if (is.na(g)) {wdtmp<-removeNA(i,j,WD);
++     } else if (g<nblv) {wdtmp0<-WD[WD[,bvar]==blv[g],]; wdtmp<-removeNA(i,j,wdtmp0);
++     } else {wdtmp<-removeNA(i,j,WD); }
++   }
++   if (is.na(g)) {fmladj1<-fmladj;
++   } else if (g<nblv) {fmladj1<-fmladj;
++   } else {fmladj1<-paste(fmladj,"+factor(",bvar,")",sep="");}
++   xTMP <- wdtmp[,xvname[j]]
++   tmp.ss<-seq(0.05,0.95,0.05)
++   tp<-quantile(xTMP,probs=tmp.ss,na.rm=TRUE) 
++   tmp.llk<-rep(NA,length(tmp.ss))
++   fml<-paste(yvname[i],"~",xvname[j],"+tmp.X",fmladj1)
++   if (!is.na(tppmin) & !is.na(tppmax)) {
++     tp2.min = tppmin; tp2.max = tppmax;
++   } else {
++     for (k in (1:length(tmp.ss))) {
++       tmp.X<-(xTMP > tp[k])*(xTMP-tp[k]); wdtmp1<-cbind(wdtmp,tmp.X)
++       if (opt=="glm" | opt=="gee") tmp.mdl<-setglm(fml, i, wdtmp1);
++       if (opt=="gam") tmp.mdl<-setgam(fml, i, wdtmp1);
++       tmp.llk[k]<-logLik(tmp.mdl)
++       rm(wdtmp1, tmp.X)
++     }
++     tp1<-tmp.ss[which.max(tmp.llk)]
++     tp2.min = tp1 - 0.04
++     tp2.max = tp1 + 0.04
++     if (tp2.min<0.05) {tp2.min=0.05}
++     if (tp2.max>0.95) {tp2.max=0.95}
++   }	
++   tp.pctlrange<-quantile(xTMP,probs=c(tp2.min,tp2.max),na.rm=TRUE)
++   tp.range<-unique(xTMP[xTMP>tp.pctlrange[1] & xTMP<tp.pctlrange[2]])
++   while (length(tp.range)>5) {
++     tmp.pct3<-quantile(tp.range,probs=c(0,0.25,0.5,0.75,1),type=3)
++     tmp.llk3<-rep(NA,3)
++     for (k in (2:4)) {
++       tmp.X<-(xTMP>tmp.pct3[k])*(xTMP-tmp.pct3[k]); wdtmp1<-cbind(wdtmp,tmp.X)
++       if (opt=="glm" | opt=="gee") tmp.mdl<-setglm(fml, i, wdtmp1);
++       if (opt=="gam") tmp.mdl<-setgam(fml, i, wdtmp1);
++       tmp.llk3[k-1]<-logLik(tmp.mdl)
++       rm(wdtmp1, tmp.X)
++      }
++      tmp.min3<-which.max(tmp.llk3)
++      tp.range<-tp.range[tp.range>=tmp.pct3[tmp.min3] & tp.range<=tmp.pct3[tmp.min3+2]]
++   }
++   if (length(tp.range)>0) {
++     if (length(tp.range)==1) {tp.val=tp.range[1];} else {
++       tmp.llk<-rep(NA,length(tp.range))
++       for (k in (1:length(tp.range))) {
++          tmp.X<-(xTMP>tp.range[k])*(xTMP-tp.range[k]); wdtmp1<-cbind(wdtmp,tmp.X)
++          if (opt=="glm" | opt=="gee") tmp.mdl<-setglm(fml, i, wdtmp1); 
++          if (opt=="gam") tmp.mdl<-setgam(fml, i, wdtmp1); 
++          tmp.llk[k]<-logLik(tmp.mdl)
++          rm(wdtmp1, tmp.X)
++       }
++       tp.val<-tp.range[which.max(tmp.llk)]
++     }
++   } else { tp.val<-tp.pctlrange[1];}
++   return(round(tp.val,dec));
++ }
+> get2lines<-function(i,j,g,tp.value,opt) {
++   if (is.na(g)) {fmladj1<-fmladj;wdtmp<-removeNA(i,j,WD);
++   } else if (g<nblv) {fmladj1<-fmladj;wdtmp0<-WD[WD[,bvar]==blv[g],];wdtmp<-removeNA(i,j,wdtmp0);
++   } else {fmladj1<-paste(fmladj,"+factor(",bvar,")",sep="");wdtmp<-removeNA(i,j,WD);}
++   xTMP<-wdtmp[,xvname[j]]
++   tmp.X1<-(xTMP<=tp.value)*(xTMP-tp.value)
++   tmp.X2<-(xTMP> tp.value)*(xTMP-tp.value)
++   wdtmp1<-cbind(wdtmp,xTMP,tmp.X1,tmp.X2)
++   fml0<-paste(yvname[i],"~xTMP+tmp.X2",fmladj1)
++   fml1<-paste(yvname[i],"~tmp.X1+tmp.X2",fmladj1)
++   fml2<-paste(yvname[i],"~xTMP",fmladj1)
++   fmlp<-paste(yvname[i],"~xTMP+tmp.X2")
++   tmpn<-nrow(wdtmp)
++   if (opt=="glm") {
++      tmp.mdl0<-setglm(fml0,i,wdtmp1); tmp.mdl1<-setglm(fml1,i,wdtmp1)
++      tmp.mdl2<-setglm(fml2,i,wdtmp1); tmp.mdlp<-setglm(fmlp,i,wdtmp1)
++   }
++   if (opt=="gam") {
++      tmp.mdl0<-setgam(fml0,i,wdtmp1); tmp.mdl1<-setgam(fml1,i,wdtmp1)
++      tmp.mdl2<-setgam(fml2,i,wdtmp1); tmp.mdlp<-setgam(fmlp,i,wdtmp1)
++   }
++   if (opt=="gee") {
++      tmp.mdl0<-setgee(fml0,i,wdtmp1); tmp.mdl1<-setgee(fml1,i,wdtmp1)
++      tmp.mdl2<-setgee(fml2,i,wdtmp1); tmp.mdlp<-setglm(fmlp,i,wdtmp1)
++   }
++   pd<-predict(tmp.mdlp,data.frame(xTMP=tp.value,tmp.X2=0), se.fit=TRUE)
++   prd<-paste(numfmt(pd$fit,dec)," (",numfmt(pd$fit-1.96*pd$se.fit,dec),", ", numfmt(pd$fit+1.96*pd$se.fit, dec),")",sep="")
++   m2<-mdl2oo(tmp.mdl2,"xTMP",opt)
++   m1<-mdl2oo(tmp.mdl1,c("tmp.X1","tmp.X2"),opt)
++   m0<-mdl2oo(tmp.mdl0,"tmp.X2",opt)
++   if (opt=="gee") {
++      plrt<-try(anova(tmp.mdl0,tmp.mdl2)$"P(>|Chi|)",TRUE)
++      plrt<-ifelse((plrt<="9" && plrt>="0"), pvformat(plrt,3),"-")
++   } else {plrt<- pvformat(1-pchisq(2*(logLik(tmp.mdl0)[1]-logLik(tmp.mdl2)[1]),1),3);}
++   oo<-list(c("",m2,"",tp.value,m1,m0,prd,plrt),tmpn)
++   return(oo)
++ }
+> get3lines<-function(i,j,g,tp.value,opt) {
++   if (is.na(g)) {fmladj1<-fmladj;wdtmp<-removeNA(i,j,WD);
++   } else if (g<nblv) {fmladj1<-fmladj;wdtmp0<-WD[WD[,bvar]==blv[g],];wdtmp<-removeNA(i,j,wdtmp0);
++   } else {fmladj1<-paste(fmladj,"+factor(",bvar,")",sep="");wdtmp<-removeNA(i,j,WD);}
++   xTMP<-wdtmp[,xvname[j]]; tp1<-tp.value[1]; tp2<-tp.value[2]
++   tmp.X1<- (xTMP< tp1)*(xTMP-tp1)
++   tmp.X2<-((xTMP>=tp1) & (xTMP<=tp2))*(xTMP-tp1)
++   tmp.X3<- (xTMP> tp2)*(xTMP-tp2)
++   tmp.B1<- (xTMP>tp2)
++   wdtmp1<-cbind(wdtmp,xTMP,tmp.X1,tmp.X2,tmp.X3,tmp.B1)
++   fml0<-paste(yvname[i],"~xTMP+tmp.X1+tmp.X3+tmp.B1",fmladj1)
++   fml1<-paste(yvname[i],"~tmp.X1+tmp.X2+tmp.X3+tmp.B1",fmladj1)
++   fml2<-paste(yvname[i],"~xTMP",fmladj1)
++   tmpn<-nrow(wdtmp)
++   if (opt=="glm") {
++      tmp.mdl0<-setglm(fml0,i,wdtmp1); tmp.mdl1<-setglm(fml1,i,wdtmp1); tmp.mdl2<-setglm(fml2,i,wdtmp1);
++   }
++   if (opt=="gam") {
++      tmp.mdl0<-setgam(fml0,i,wdtmp1); tmp.mdl1<-setgam(fml1,i,wdtmp1); tmp.mdl2<-setgam(fml2,i,wdtmp1); 
++   }
++   if (opt=="gee") {
++      tmp.mdl0<-setgee(fml0,i,wdtmp1); tmp.mdl1<-setgee(fml1,i,wdtmp1); tmp.mdl2<-setgee(fml2,i,wdtmp1);
++   }
++   m2<-mdl2oo(tmp.mdl2,"xTMP",opt)
++   m1<-mdl2oo(tmp.mdl1,c("tmp.X1","tmp.X2","tmp.X3"),opt)
++   m0<-mdl2oo(tmp.mdl0,c("tmp.X1","tmp.X3"),opt)
++   if (opt=="gee") {
++      plrt<-try(anova(tmp.mdl0,tmp.mdl2)$"P(>|Chi|)",TRUE)
++      plrt<-ifelse((plrt<="9" && plrt>="0"), pvformat(plrt,3),"-")
++   } else {plrt<- pvformat(1-pchisq(2*(logLik(tmp.mdl0)[1]-logLik(tmp.mdl2)[1]),1),3);}
++   oo<-list(c("",m2,"",paste(tp.value,collapse=", "),m1,m0,plrt),tmpn)
++   return(oo)
++ }
+> getci4tp<-function(i,j,g,opt,tp0=NA) {
++   set.seed(123456)
++   if (is.na(g)) {wdt<-removeNA(i,j,WD);
++   } else if (g<nblv) {wdt<-WD[WD[,bvar]==blv[g],];wdt<-removeNA(i,j,wdt);
++   } else {wdt<-removeNA(i,j,WD);}
++   nnwd<-nrow(wdt); tp.vv<-rep(NA,1000)
++   if (!is.na(tp0)) {
++     tpp0 = sum(wdt[,xvname[j]] < tp0)/length(wdt[,xvname[j]]) 
++     tppmin = max(tpp0 - 0.09, 0.05) 
++ 	tppmax = min(tpp0 + 0.09, 0.95)
++   } else {
++     tppmin = NA; tppmax = NA
++   }
++   for (s in (1:1000)) {
++     WDi<-wdt[sample(1:nnwd,nnwd,replace=T),]
++     tp.vv[s]<-get.tpval(i, j, NA, opt, WDi, tppmin, tppmax); rm(WDi)
++   }
++   tpci<-paste(quantile(tp.vv,probs=c(0.025,0.975)),collapse=", ")
++   return(tpci);
++ }
+> if (!is.na(weights.var)) {weights<-WD[,weights.var];} else {weights<-1;}
+> WD<-cbind(WD,weights);
+> vlabelN<-(substr(vlabel,1,1)==" ");
+> vlabelZ<-vlabel[vlabelN];vlabelV<-vlabel[!vlabelN]
+> vnameV<-vname[!vlabelN];vnameZ<-vname[vlabelN];
+> allvname<-c(yvname,xvname,bvar,avname,subjvname,vname.start,timevar,"weights"); 
+> allvname<-allvname[!is.na(allvname)]
+> WD<-WD[,allvname];
+> w<-c("<!DOCTYPE html><html lang='zh'><head><meta charset='gb2312'></head><body>")
+> w<-c(w,paste("<h2>", title, "</h2>"))
+> if (length(avname)>0) {
++   if (sum((saf=="s" | saf=="S") & alv>0)>0) w<-c(w,"</br>Spline smoothing only applies for continuous variables")
++   if (!is.na(subjvname)) saf<-rep(0,length(saf))
++ }
+> if (sum(xlv>0)>0) w<-c(w,"Categorical exposure variables were ignored")
+> xvname<-xvname[xlv==0];
+> if (!is.na(subjvname)) WD<-WD[order(WD[,subjvname]),];
+> 
+> fmladj<-""; avb=""; smoothav<-0; 
+> if (length(avname)>0) {
++   avb<-vlabelV[match(avname,vnameV)];
++   avname_ <- avname 
++   smoothavi<-((saf=="s" | saf=="S") & alv==0)
++   smoothav<-sum(smoothavi)
++   avname_[smoothavi]<-paste("s(",avname[smoothavi],")",sep="")
++   avb1<-avb
++   avb1[smoothavi]<-paste(avb[smoothavi],"(Smooth)",sep="")
++   avname_[alv>0]<-paste("factor(",avname[alv>0],")",sep="")
++   fmladj<-paste("+",paste(avname_,collapse="+"))
++ }
+> if (is.na(bvar)) {
++   blvb<-"N"; blvb_<-"N"; nblv<-1; blbl<-"";
++ } else {
++   blbl<-vlabelV[match(bvar,vnameV)]; if (is.na(blbl)) blbl<-bvar;
++   blv<-levels(factor(WD[,bvar])); nblv<-length(blv)+1
++   blvb_<-vlabelZ[match(paste(bvar,".",blv,sep=""),vnameZ)];
++   blvb_[is.na(blvb_)]<-blv[is.na(blvb_)];
++   blvb<-c(paste(blbl,blvb_,sep="="),"Total");
++   blvb_<-c(blvb_,"Total")
++   WD<-WD[!is.na(WD[,bvar]),]
++ }
+> ny=length(yvname); nx=length(xvname); 
+> xb<-vlabelV[match(xvname,vnameV)]; xb[is.na(xb)]<-xvname[is.na(xb)]
+> yb<-vlabelV[match(yvname,vnameV)]; yb[is.na(yb)]<-yvname[is.na(yb)]
+> opt<-ifelse(!is.na(subjvname), "gee", ifelse(smoothav>0, "gam", "glm")) ;
+> colprn<-prn
+> if (is.na(par1)) par1<-"";
+> if (is.numeric(par1)) {tp.vv<-par1;
++ } else {
++   tmp<-as.numeric(strsplit(par1," ")[[1]]);  tp.vv<-c(tmp[!is.na(tmp)],NA)
++ }
+Warning message:
+NAs introduced by coercion 
+> prn<-ifelse(!is.na(bvar), "S", ifelse(nx>1 & ny==1, "X", "Y"));
+> if (length(tp.vv)>2) tp.vv<-tp.vv[1:2]
+> ntp<-length(tp.vv); 
+> getci<-FALSE
+> prnopt<-c("β (95%CI) Pvalue / OR (95%CI) Pvalue", "β (95%CI) Pvalue", "β+se / OR (95%CI) *P<0.05 **P<0.01 ***P<0.001")
+>  
+> 
+> if (ntp==1) {
++   cc0<-c("模型 I","&nbsp&nbsp一条直线效应");
++   cc0<-c(cc0,"模型 II","&nbsp&nbsp折点(K)","&nbsp&nbsp &lt K 段效应 1","&nbsp&nbsp &gt K 段效应 2","&nbsp&nbsp 2与1的效应差")
++   cc0<-c(cc0,"&nbsp&nbsp折点处方程预测值")
++   if (is.na(tp.vv[1]) & chk==1) getci<-TRUE;
++ } else {
++   cc0<-c("模型 I","&nbsp&nbsp一条直线效应");
++   cc0<-c(cc0,"模型 II","&nbsp&nbsp折点(K1,K2)","&nbsp&nbsp &lt K1 段效应 1","&nbsp&nbsp K1-K2 段效应 2","&nbsp&nbsp &gt K2 段效应 3")
++   cc0<-c(cc0,"&nbsp&nbsp 1与2的效应差","&nbsp&nbsp 3与2的效应差")
++ }
+> if (opt=="gee") {cc0<-c(cc0,"ANOVA 两模型比较");} else {cc0<-c(cc0,"对数似然比检验");}
+> if (getci) cc0<-c(cc0,"折点的95可信区间");
+> sink(paste(ofname,".lst",sep=""))
+> nn<-c("Outcome","Exposure",blvb);
+> if (prn=="Y") {
++   for (j in 1:nx) {
++     tt<-cc0;
++     for (i in 1:ny) {
++       if (is.na(tp.vv[1])) {tp.v<-get.tpval(i,j,NA,opt,NA);} else {tp.v<-tp.vv;}
++       if (ntp==1) tmpij<-get2lines(i,j,NA,tp.v,opt);  
++       if (ntp==2) tmpij<-get3lines(i,j,NA,tp.v,opt);  
++       if (getci) {tt<-cbind(tt,c(tmpij[[1]],getci4tp(i,j,NA,opt,tp.v)));} else {tt<-cbind(tt,tmpij[[1]]);}
++       nn<-rbind(nn,c(yb[i],xb[j],tmpij[[2]]))
++     }
++     tt<-rbind(c("Outcome: ",yb),tt)
++     w<-c(w,paste("</br>For exposure:",xb[j]))
++     w<-c(w,"</br><table border=3>", mat2htmltable(tt), "</table>")
++   }
++ }
+> if (prn=="X") {
++   for (i in 1:ny) {
++     tt<-cc0;
++     for (j in 1:nx) {
++       if (is.na(tp.vv[1])) {tp.v<-get.tpval(i,j,NA,opt,NA);} else {tp.v<-tp.vv;}
++       if (ntp==1) tmpij<-get2lines(i,j,NA,tp.v,opt);  
++       if (ntp==2) tmpij<-get3lines(i,j,NA,tp.v,opt);  
++       if (getci) {tt<-cbind(tt,c(tmpij[[1]],getci4tp(i,j,NA,opt,tp.v)));} else {tt<-cbind(tt,tmpij[[1]]);}
++       nn<-rbind(nn,c(yb[i],xb[j],tmpij[[2]]))
++     }
++     tt<-rbind(c("Exposure: ",xb),tt)
++     w<-c(w,paste("</br>For outcome:",yb[i]))
++     w<-c(w,"</br><table border=3>", mat2htmltable(tt), "</table>")
++   }
++ }
+> if (prn=="S") {
++   for (i in 1:ny) {
++     tt<-cc0;
++     for (j in 1:nx) {
++       nnij<-c(yb[i],xb[j])
++       for (g in 1:nblv) {
++         if (is.na(tp.vv[1])) {tp.v<-get.tpval(i,j,g,opt,NA);} else {tp.v<-tp.vv;}
++         if (ntp==1) tmpij<-get2lines(i,j,g,tp.v,opt);  
++         if (ntp==2) tmpij<-get3lines(i,j,g,tp.v,opt);  
++         if (getci) {tt<-cbind(tt,c(tmpij[[1]],getci4tp(i,j,g,opt,tp.v)));} else {tt<-cbind(tt,tmpij[[1]]);}
++         nnij<-c(nnij,tmpij[[2]])
++       }
++       nn<-rbind(nn,nnij)
++     }
++     tt<-rbind(c(blbl,blvb_),tt)
++     w<-c(w,paste("</br>For outcome:",yb[i]))
++     w<-c(w,paste("</br>For Exposure:",xb[j]))
++     w<-c(w,"</br><table border=3>", mat2htmltable(tt), "</table>")
++   }
++ }
+> sink()
+> w<-c(w,"</br>表中数据：", prnopt[colprn])
+> w<-c(w,paste(c("</br>结果变量:",paste(yb,collapse="; ")),collapse=" "))
+> w<-c(w,paste(c("</br>暴露变量:",paste(xb,collapse="; ")),collapse=" "))
+> if (length(avname)==0) avb1<-"None";
+> w<-c(w,paste(c("</br>调整变量:",paste(avb1,collapse="; ")),collapse=" "))
+> if (smoothav>0) w<-c(w,". Generalized additive models were applied")
+> if (opt=="gee") w<-c(w, paste("</br>Generalized estimate equation were used, subject ID=", subjvname, "(", gee.TYPE,")",sep=""))
+> w<-c(w,"</br></br>各模型所用的样本量</br><table border=3>", mat2htmltable(nn), "</table>")
+> w<-c(w,wd.subset)
+> w<-c(w,paste("</br>by akiprogres",Sys.Date()))
+> w<-c(w,"</body></html>")
+> fileConn<-file(paste(ofname,".htm",sep="")); writeLines(w, fileConn)
+>  
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   8.43    1.85   10.34 
